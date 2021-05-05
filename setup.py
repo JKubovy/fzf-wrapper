@@ -15,7 +15,7 @@ setuptools.setup(
     author='Jan Kubovy',
     author_email='JanKubovy94@gmail.com',
     license='MIT',
-    description='Python wrapper to fzf tool. Let user interactively choose from given choices',
+    description='Python wrapper for junegunn\'s fzf. Let user interactively choose from given choices',
     long_description=read_file('README.md'),
     long_description_content_type='text/markdown',
     url='https://github.com/JKubovy/fzf-wrapper',
