@@ -23,6 +23,7 @@ Usage
 	# eg. ['two']
 
 You can add fzf arguments as second parameter:
+
 	prompt(['1', '2', '3'], '--multi --cycle')
 
 Licence
