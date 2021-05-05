@@ -17,7 +17,7 @@ Install
 
 Usage
 -----
-	from fzf\_wrapper import prompt
+	from fzf_wrapper import prompt
 	prompt(['one', 'two', 'three'])
 	# Start fzf and return selected item / items in list
 	# eg. ['two']
