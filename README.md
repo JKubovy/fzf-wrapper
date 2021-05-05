@@ -4,7 +4,7 @@ fzf-wrapper
 **Python wrapper to fzf tool. Let user interactively choose from given choices**
 ![](https://github.com/JKubovy/fzf-wrapper/blob/master/fzf-wrapper.gif)
 
-fzf-wrapper is **multiplatform** and pure python library. Recommended tool to improve user experience with your scripts.
+fzf-wrapper is python **multiplatform** library without any other dependency then fzf itself. Recommended tool to improve user experience in your scripts.
 
 Requirements
 -----------
