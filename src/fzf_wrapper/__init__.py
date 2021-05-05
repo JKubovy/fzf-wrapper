@@ -1,1 +1,1 @@
-__all__ = ['prompt']
+from .fzf_wrapper import prompt
