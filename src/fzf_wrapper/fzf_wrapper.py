@@ -33,7 +33,8 @@ def prompt(choices: List[str], fzf_options: str = '') -> List[str]:
       ValueError
         if given wrong arguments
       AttributeError
-        if some commands were not found in Path
+        if fzf command was not found in Path
+        or if there is some problem while running fzf
 
     Returns
     =======
@@ -54,10 +55,12 @@ def prompt(choices: List[str], fzf_options: str = '') -> List[str]:
     command = ['fzf']
     command.extend(filter(None, fzf_options.split(' ')))
     choices_bytes = '\n'.join(choices).encode()
-    command_result = run(command, input=choices_bytes, stdout=PIPE)
+    command_result = run(command, input=choices_bytes, stderr=PIPE, stdout=PIPE)
     if command_result.returncode == 130:  # User cancel fzf
         return []
     elif command_result.returncode == 1:  # User select empty line
         return []
+    elif command_result.returncode != 0:
+        raise AttributeError(str(command_result.stderr))
     results = command_result.stdout.decode().strip().split('\n')
     return results
