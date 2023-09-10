@@ -24,7 +24,7 @@
 # SOFTWARE.
 
 import platform
-from subprocess import run, PIPE, DEVNULL
+from subprocess import run, PIPE, DEVNULL, CalledProcessError
 from typing import List
 
 FZF_URL = "https://github.com/junegunn/fzf"
@@ -77,12 +77,14 @@ def prompt(choices: List[str], fzf_options: str = '') -> List[str]:
     command = ['fzf']
     command.extend(filter(None, fzf_options.split(' ')))
     choices_bytes = '\n'.join(choices).encode()
-    command_result = run(command, input=choices_bytes, stderr=PIPE, stdout=PIPE)
-    if command_result.returncode == 130:  # User cancel fzf
-        return []
-    elif command_result.returncode == 1:  # User select empty line
-        return []
-    elif command_result.returncode != 0:
-        raise AttributeError(str(command_result.stderr))
-    results = command_result.stdout.decode().strip().split('\n')
-    return results
+    try:
+        command_result = run(command, input=choices_bytes, check=True, stdout=PIPE)
+        results = command_result.stdout.decode().strip().split('\n')
+        return results
+    except CalledProcessError as e:
+        if e.returncode == 130:  # User cancel fzf
+            return []
+        elif e.returncode == 1:  # User select empty line
+            return []
+        elif e.returncode != 0:
+            raise AttributeError(str(e.stderr))
