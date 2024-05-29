@@ -23,20 +23,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import platform
-from subprocess import run, PIPE, DEVNULL, CalledProcessError
+from subprocess import run, PIPE, CalledProcessError
 from typing import List
+from shutil import which
 
 FZF_URL = "https://github.com/junegunn/fzf"
+FZF_CMD = "fzf"
 
 
 def __check_fzf_in_path() -> bool:
-    try:
-        cmd = 'where' if platform.system().lower() == 'windows' else 'which'
-        return_code = run([cmd, 'fzf'], stderr=DEVNULL, stdout=DEVNULL).returncode
-        return return_code == 0
-    except IOError:
-        return False
+    return which(FZF_CMD) != None
 
 
 def prompt(choices: List[str], fzf_options: str = '') -> List[str]:
@@ -68,13 +64,13 @@ def prompt(choices: List[str], fzf_options: str = '') -> List[str]:
     if fzf_options is None:
         fzf_options = ''
     if not all([isinstance(x, str) for x in choices]):
-        raise ValueError("Argument 'choices' has to contaions only str!")
+        raise ValueError("Argument 'choices' has to contains only str!")
     if not isinstance(fzf_options, str):
         raise ValueError("Argument 'fzf_options' has to be str!")
     if not __check_fzf_in_path():
         raise AttributeError(f"Unable to find 'fzf' in PATH!\nInstall fzf from {FZF_URL}")
 
-    command = ['fzf']
+    command = [FZF_CMD]
     command.extend(filter(None, fzf_options.split(' ')))
     choices_bytes = '\n'.join(choices).encode()
     try:
@@ -86,5 +82,5 @@ def prompt(choices: List[str], fzf_options: str = '') -> List[str]:
             return []
         elif e.returncode == 1:  # User select empty line
             return []
-        elif e.returncode != 0:
+        else:
             raise AttributeError(str(e.stderr))
